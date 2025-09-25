@@ -34,7 +34,7 @@ endif()
 
 set(_version 2.0.0)
 
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.27)
 include(CMakeParseArguments)
 
 # Enable use of CODEGEN keyword in add_custom_command() calls if available
@@ -507,6 +507,7 @@ function(cmrc_add_resource_library name)
     # with a character array compiled in containing the contents of the
     # corresponding resource file.
     add_library(${name} ${ARG_TYPE} ${libcpp})
+    set_source_files_properties(${libcpp} PROPERTIES SKIP_LINTING ON)
     set_property(TARGET ${name} PROPERTY CMRC_LIBDIR "${libdir}")
     set_property(TARGET ${name} PROPERTY CMRC_NAMESPACE "${ARG_NAMESPACE}")
     target_link_libraries(${name} PUBLIC cmrc::base)
@@ -609,6 +610,7 @@ function(cmrc_add_resources name)
         _cmrc_generate_intermediate_cpp(${lib_ns} ${sym} "${abs_out}" "${abs_in}")
         target_sources(${name} PRIVATE "${abs_out}")
         set_property(TARGET ${name} APPEND PROPERTY CMRC_EXTERN_DECLS
+        set_source_files_properties(${abs_out} PROPERTIES SKIP_LINTING ON)
             "// Pointers to ${input}"
             "extern const char* const ${sym}_begin\;"
             "extern const char* const ${sym}_end\;"
